@@ -23,6 +23,8 @@
 Filename: `~/.profile`
 
 ```shell
+...
+...
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
@@ -31,8 +33,6 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 ```shell
 # source ~/.profile
 ```
-
-> For Debian 10+
 
 ### Download ANTLR
 

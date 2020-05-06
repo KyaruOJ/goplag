@@ -6,7 +6,7 @@
  - Java 1.8+
  - ANTLR v4.8+
 
-## Install
+## Build
 
 ### Install dependencies
 
@@ -18,7 +18,7 @@
 # mv go /usr/local
 ```
 
-### Setting Go paths
+### Set Go paths
 
 Filename: `~/.profile`
 

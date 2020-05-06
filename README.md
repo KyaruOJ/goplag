@@ -80,6 +80,15 @@ java -jar /usr/local/lib/antlr-4.8-complete.jar
 # goplag [-base {base file}] -a {file1} -b {file2}
 ```
 
+## Docker
+
+```shell
+# docker run --rm \
+  -v $(pwd)/demo:/goplag \
+  goplag:latest \
+  goplag -base base.java -a a.java -b b.java
+```
+
 ## Reference
 
  - [Winnowing: Local Algorithms for Document Fingerprinting](http://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)

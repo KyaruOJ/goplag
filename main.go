@@ -12,6 +12,7 @@ import (
 
 func main() {
 	var base string
+	var raw bool
 	var comparing string
 	var compared string
 
@@ -24,6 +25,12 @@ func main() {
 				Value:       "",
 				Required:    false,
 				Destination: &base,
+			},
+			&cli.BoolFlag{
+				Name:        "raw",
+				Value:       false,
+				Required:    false,
+				Destination: &raw,
 			},
 			&cli.StringFlag{
 				Name:        "comparing",
@@ -57,7 +64,7 @@ func main() {
 				return err
 			}
 
-			ans, err := simtest.Simtest(baseSrc, aSrc, bSrc)
+			ans, err := simtest.Simtest(baseSrc, aSrc, bSrc, raw)
 			if err != nil {
 				return err
 			}

@@ -5,16 +5,17 @@ import (
 	"goplag/lexer"
 	"goplag/source"
 	"goplag/winnowing"
+	"strconv"
 )
 
 // Simtest 执行相似度测试
-func Simtest(base, srcA, srcB *source.Source) (int, error) {
+func Simtest(base, srcA, srcB *source.Source, raw bool) (string, error) {
 	if !supportedExt(srcA) || !supportedExt(srcB) {
-		return -1, errors.New("Unsupported extension")
+		return "", errors.New("Unsupported extension")
 	}
 
 	if srcA.Ext != srcB.Ext {
-		return -1, errors.New("Extensions are not matched")
+		return "", errors.New("Extensions are not matched")
 	}
 
 	tokensA := lexer.Lexer(srcA)
@@ -23,7 +24,7 @@ func Simtest(base, srcA, srcB *source.Source) (int, error) {
 	fingerprintsA := winnowing.Winnowing(tokensA)
 	fingerprintsB := winnowing.Winnowing(tokensB)
 
-	fingerprintsBase := []int{}
+	fingerprintsBase := []string{}
 	if base != nil {
 		tokensBase := lexer.Lexer(base)
 		fingerprintsBase = winnowing.Winnowing(tokensBase)
@@ -55,5 +56,21 @@ func Simtest(base, srcA, srcB *source.Source) (int, error) {
 
 	ans := int(same * 100 / len(fingerprintsA))
 
-	return ans, nil
+	if raw {
+		res := ""
+
+		res += "similarity: "
+		res += strconv.Itoa(ans) + "% "
+		res += "(" + strconv.Itoa(same) + " / " + strconv.Itoa(len(fingerprintsA)) + ")" + "\n"
+
+		res += "tokens: "
+		res += strconv.Itoa(len(tokensA)) + " - " + strconv.Itoa(len(tokensB)) + "\n"
+
+		res += "fingerprints: "
+		res += strconv.Itoa(len(fingerprintsA)) + " - " + strconv.Itoa(len(fingerprintsB))
+
+		return res, nil
+	}
+
+	return strconv.Itoa(ans), nil
 }

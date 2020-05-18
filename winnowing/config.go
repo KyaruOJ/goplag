@@ -4,5 +4,4 @@ package winnowing
 var (
 	N          int = 5
 	WindowSize int = 9
-	Base       int = 17
 )

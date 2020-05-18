@@ -1,7 +1,7 @@
 package winnowing
 
-func generateFingerprint(hashList []int) map[int]int {
-	fingerprint := make(map[int]int)
+func generateFingerprint(hashList []string) map[int]string {
+	fingerprint := make(map[int]string)
 
 	for i := range hashList {
 		if i+WindowSize > len(hashList) {

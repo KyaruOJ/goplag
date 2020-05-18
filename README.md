@@ -2,9 +2,9 @@
 
 ## Dependency
 
- - Go 1.13+
- - Java 1.8+
- - ANTLR v4.8+
+- Go 1.13+
+- Java 1.8+
+- ANTLR v4.8+
 
 ## Build
 
@@ -77,7 +77,7 @@ java -jar /usr/local/lib/antlr-4.8-complete.jar
 ## Usgae
 
 ```shell
-# goplag [-base {base file}] -a {file1} -b {file2}
+# goplag [-base {base file}] -a {file1} -b {file2} [-raw]
 ```
 
 ## Docker
@@ -86,12 +86,12 @@ java -jar /usr/local/lib/antlr-4.8-complete.jar
 # docker run --rm \
   -v $(pwd)/demo:/goplag \
   goplag:latest \
-  goplag -base base.java -a a.java -b b.java
+  goplag -base base.java -a a.java -b b.java -raw
 ```
 
 ## Reference
 
- - [Winnowing: Local Algorithms for Document Fingerprinting](http://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)
+- [Winnowing: Local Algorithms for Document Fingerprinting](http://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)
 
 ## License
 

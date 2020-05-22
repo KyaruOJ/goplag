@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-	var base string
 	var raw bool
 	var comparing string
 	var compared string
@@ -20,12 +19,6 @@ func main() {
 		Name:  "goplag",
 		Usage: "A go program for code plagiarism detection.",
 		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:        "base",
-				Value:       "",
-				Required:    false,
-				Destination: &base,
-			},
 			&cli.BoolFlag{
 				Name:        "raw",
 				Value:       false,
@@ -46,14 +39,7 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			var baseSrc *source.Source = nil
 			var err error
-			if base != "" {
-				baseSrc, err = source.Open(base)
-				if err != nil {
-					return err
-				}
-			}
 
 			aSrc, err := source.Open(comparing)
 			if err != nil {
@@ -64,7 +50,7 @@ func main() {
 				return err
 			}
 
-			ans, err := simtest.Simtest(baseSrc, aSrc, bSrc, raw)
+			ans, err := simtest.Simtest(aSrc, bSrc, raw)
 			if err != nil {
 				return err
 			}

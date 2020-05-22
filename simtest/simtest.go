@@ -9,7 +9,7 @@ import (
 )
 
 // Simtest 执行相似度测试
-func Simtest(base, srcA, srcB *source.Source, raw bool) (string, error) {
+func Simtest(srcA, srcB *source.Source, raw bool) (string, error) {
 	if !supportedExt(srcA) || !supportedExt(srcB) {
 		return "", errors.New("Unsupported extension")
 	}
@@ -23,38 +23,19 @@ func Simtest(base, srcA, srcB *source.Source, raw bool) (string, error) {
 
 	fingerprintsA := winnowing.Winnowing(tokensA)
 	fingerprintsB := winnowing.Winnowing(tokensB)
-
-	fingerprintsBase := []string{}
-	if base != nil {
-		tokensBase := lexer.Lexer(base)
-		fingerprintsBase = winnowing.Winnowing(tokensBase)
-	}
+	fingerprintsSame := make(map[int]string)
 
 	same := 0
-	for _, fpA := range fingerprintsA {
+	for idx, fpA := range fingerprintsA {
 		for _, fpB := range fingerprintsB {
 			if fpA == fpB {
-				if base != nil {
-					flag := false
-					for _, fpBase := range fingerprintsBase {
-						if fpBase == fpA {
-							flag = true
-							break
-						}
-					}
-
-					if !flag {
-						same++
-					}
-				} else {
-					same++
-				}
+				fingerprintsSame[idx] = fpA
 				break
 			}
 		}
 	}
 
-	ans := int(same * 100 / len(fingerprintsA))
+	ans := int(len(fingerprintsSame) * 100 / len(fingerprintsA))
 
 	if raw {
 		res := ""

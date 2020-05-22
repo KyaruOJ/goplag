@@ -2,6 +2,6 @@ package winnowing
 
 // 参数设置
 var (
-	N          int = 7
-	WindowSize int = 9
+	N          int = 9
+	WindowSize int = 17
 )

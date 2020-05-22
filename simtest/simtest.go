@@ -35,29 +35,34 @@ func Simtest(srcA, srcB *source.Source, raw bool) (string, error) {
 		}
 	}
 
-	sort.Ints(interval)
-	N := winnowing.N
-	merged := make([][]int, 0)
-	merged = append(merged, []int{interval[0], interval[0] + N})
-	for _, startAt := range interval {
-		m := merged[len(merged)-1]
-
-		if startAt > m[1] {
-			merged = append(merged, []int{startAt, startAt + N})
-			continue
-		}
-
-		if startAt+N > m[1] {
-			m[1] = startAt + N
-		}
-	}
-
+	ans := 0
 	length := 0
-	for _, item := range merged {
-		length += item[1] - item[0]
-	}
 
-	ans := int(length * 100 / len(tokensA))
+	if len(interval) > 0 {
+		sort.Ints(interval)
+		N := winnowing.N
+		merged := make([][]int, 0)
+		merged = append(merged, []int{interval[0], interval[0] + N})
+		for _, startAt := range interval {
+			m := merged[len(merged)-1]
+
+			if startAt > m[1] {
+				merged = append(merged, []int{startAt, startAt + N})
+				continue
+			}
+
+			if startAt+N > m[1] {
+				m[1] = startAt + N
+			}
+		}
+
+		length = 0
+		for _, item := range merged {
+			length += item[1] - item[0]
+		}
+
+		ans = int(length * 100 / len(tokensA))
+	}
 
 	if raw {
 		res := ""

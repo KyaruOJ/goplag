@@ -14,6 +14,7 @@ func main() {
 	var raw bool
 	var comparing string
 	var compared string
+	var orig bool
 
 	app := &cli.App{
 		Name:  "goplag",
@@ -24,6 +25,12 @@ func main() {
 				Value:       false,
 				Required:    false,
 				Destination: &raw,
+			},
+			&cli.BoolFlag{
+				Name:        "orig",
+				Value:       false,
+				Required:    false,
+				Destination: &orig,
 			},
 			&cli.StringFlag{
 				Name:        "comparing",
@@ -39,6 +46,7 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
+			var ans string
 			var err error
 
 			aSrc, err := source.Open(comparing)
@@ -50,7 +58,11 @@ func main() {
 				return err
 			}
 
-			ans, err := simtest.Simtest(aSrc, bSrc, raw)
+			if orig {
+				ans, err = simtest.Origtest(aSrc, bSrc)
+			} else {
+				ans, err = simtest.Simtest(aSrc, bSrc, raw)
+			}
 			if err != nil {
 				return err
 			}

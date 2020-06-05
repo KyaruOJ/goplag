@@ -4,6 +4,7 @@ import (
 	"errors"
 	"goplag/lexer"
 	"goplag/source"
+	"goplag/winnow"
 	"goplag/winnowing"
 	"sort"
 	"strconv"
@@ -76,6 +77,37 @@ func Simtest(srcA, srcB *source.Source, raw bool) (string, error) {
 
 		return res, nil
 	}
+
+	return strconv.Itoa(ans), nil
+}
+
+// Origtest 执行原始相似度测试
+func Origtest(srcA, srcB *source.Source) (string, error) {
+	if !supportedExt(srcA) || !supportedExt(srcB) {
+		return "", errors.New("Unsupported extension")
+	}
+
+	if srcA.Ext != srcB.Ext {
+		return "", errors.New("Extensions are not matched")
+	}
+
+	tokensA := lexer.Lexer(srcA)
+	tokensB := lexer.Lexer(srcB)
+
+	fingerprintsA := winnow.Winnowing(tokensA)
+	fingerprintsB := winnow.Winnowing(tokensB)
+
+	same := 0
+	for _, fpA := range fingerprintsA {
+		for _, fpB := range fingerprintsB {
+			if fpA == fpB {
+				same++
+				break
+			}
+		}
+	}
+
+	ans := int(same * 100 / len(fingerprintsA))
 
 	return strconv.Itoa(ans), nil
 }

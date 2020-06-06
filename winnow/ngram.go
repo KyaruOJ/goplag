@@ -1,16 +1,14 @@
 package winnow
 
-import "goplag/token"
+func generateNgram(code []byte) [][]byte {
+	ngram := make([][]byte, 0)
 
-func generateNgram(tokens []token.Token) [][]token.Token {
-	ngram := make([][]token.Token, 0)
-
-	for i := range tokens {
-		if i+N > len(tokens) {
+	for i := range code {
+		if i+N > len(code) {
 			break
 		}
 
-		ngram = append(ngram, tokens[i:i+N])
+		ngram = append(ngram, code[i:i+N])
 	}
 
 	return ngram

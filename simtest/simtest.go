@@ -91,11 +91,8 @@ func Origtest(srcA, srcB *source.Source) (string, error) {
 		return "", errors.New("Extensions are not matched")
 	}
 
-	tokensA := lexer.Lexer(srcA)
-	tokensB := lexer.Lexer(srcB)
-
-	fingerprintsA := winnow.Winnowing(tokensA)
-	fingerprintsB := winnow.Winnowing(tokensB)
+	fingerprintsA := winnow.Winnowing([]byte(srcA.Code))
+	fingerprintsB := winnow.Winnowing([]byte(srcB.Code))
 
 	same := 0
 	for _, fpA := range fingerprintsA {

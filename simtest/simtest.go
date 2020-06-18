@@ -1,34 +1,41 @@
 package simtest
 
 import (
-	"errors"
+	"fmt"
 	"goplag/lexer"
 	"goplag/source"
-	"goplag/winnow"
 	"goplag/winnowing"
 	"sort"
 	"strconv"
 )
 
 // Simtest 执行相似度测试
-func Simtest(srcA, srcB *source.Source, raw bool) (string, error) {
-	if !supportedExt(srcA) || !supportedExt(srcB) {
-		return "", errors.New("Unsupported extension")
+func Simtest(srcs []*source.Source) error {
+	for _, src := range srcs {
+		src.Tokens = lexer.Lexer(src)
+		src.Fingerprints = winnowing.Winnowing(src.Tokens)
 	}
 
-	if srcA.Ext != srcB.Ext {
-		return "", errors.New("Extensions are not matched")
+	for _, srcA := range srcs {
+		for _, srcB := range srcs {
+			if srcA == srcB {
+				continue
+			}
+
+			ans := compare(srcA, srcB)
+
+			fmt.Println(srcA.Path + "|" + srcB.Path + "|" + strconv.Itoa(ans))
+		}
 	}
 
-	tokensA := lexer.Lexer(srcA)
-	tokensB := lexer.Lexer(srcB)
+	return nil
+}
 
-	fingerprintsA := winnowing.Winnowing(tokensA)
-	fingerprintsB := winnowing.Winnowing(tokensB)
+func compare(a, b *source.Source) int {
 	interval := make([]int, 0)
 
-	for idx, fpA := range fingerprintsA {
-		for _, fpB := range fingerprintsB {
+	for idx, fpA := range a.Fingerprints {
+		for _, fpB := range b.Fingerprints {
 			if fpA == fpB {
 				interval = append(interval, idx)
 				break
@@ -62,49 +69,8 @@ func Simtest(srcA, srcB *source.Source, raw bool) (string, error) {
 			length += item[1] - item[0]
 		}
 
-		ans = int(length * 100 / len(tokensA))
+		ans = int(length * 100 / len(a.Tokens))
 	}
 
-	if raw {
-		res := ""
-
-		res += "similarity: "
-		res += strconv.Itoa(ans) + "% "
-		res += "(" + strconv.Itoa(length) + " / " + strconv.Itoa(len(tokensA)) + ")" + "\n"
-
-		res += "tokens: "
-		res += strconv.Itoa(len(tokensA)) + " - " + strconv.Itoa(len(tokensB))
-
-		return res, nil
-	}
-
-	return strconv.Itoa(ans), nil
-}
-
-// Origtest 执行原始相似度测试
-func Origtest(srcA, srcB *source.Source) (string, error) {
-	if !supportedExt(srcA) || !supportedExt(srcB) {
-		return "", errors.New("Unsupported extension")
-	}
-
-	if srcA.Ext != srcB.Ext {
-		return "", errors.New("Extensions are not matched")
-	}
-
-	fingerprintsA := winnow.Winnowing([]byte(srcA.Code))
-	fingerprintsB := winnow.Winnowing([]byte(srcB.Code))
-
-	same := 0
-	for _, fpA := range fingerprintsA {
-		for _, fpB := range fingerprintsB {
-			if fpA == fpB {
-				same++
-				break
-			}
-		}
-	}
-
-	ans := int(same * 100 / len(fingerprintsA))
-
-	return strconv.Itoa(ans), nil
+	return ans
 }

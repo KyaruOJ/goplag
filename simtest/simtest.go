@@ -22,7 +22,7 @@ func Simtest(srcs []*source.Source) error {
 				continue
 			}
 
-			ans := compare(srcA, srcB)
+			ans := Compare(srcA, srcB)
 
 			fmt.Println(srcA.Path + "|" + srcB.Path + "|" + strconv.Itoa(ans))
 		}
@@ -31,7 +31,8 @@ func Simtest(srcs []*source.Source) error {
 	return nil
 }
 
-func compare(a, b *source.Source) int {
+// Compare 执行对比测试
+func Compare(a, b *source.Source) int {
 	interval := make([]int, 0)
 
 	for idx, fpA := range a.Fingerprints {
